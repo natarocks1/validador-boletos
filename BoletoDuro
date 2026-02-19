@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Show de Rock</title>
+  <style>
+    body { font-family: Arial; text-align:center; background:#111; color:#fff; }
+    img { max-width: 90%; margin: 20px 0; }
+    a.button { display:inline-block; padding:15px 30px; margin:10px; background:red; color:white; text-decoration:none; border-radius:5px; font-size:18px; }
+  </style>
+</head>
+<body>
+  <h1>Show de Rock – Gusa Band</h1>
+  <p>¡No te pierdas la mejor noche de rock!</p>
+  <img src="https://link-a-tu-foto-del-evento.jpg" alt="Banner del show">
+  
+  <h2>Compra tus boletos</h2>
+  <a href="https://www.mercadopago.com/checkout/link/TU_LINK_GENERAL" class="button">General</a>
+  <a href="https://www.mercadopago.com/checkout/link/TU_LINK_MEETGREET" class="button">Meet & Greet</a>
+</body>
+</html>
