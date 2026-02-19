@@ -1,34 +1,75 @@
-const sheetURL = "https://script.google.com/macros/s/AKfycbwcr6wshTWZJECRnRofNJ_ALvLnkSdqzsHBSy1K1ABr9RsUWifPO5G5ZkjOTuvXsJK5/exec";
-
-const result = document.getElementById("resultado");
-
-fetch(sheetURL + "?code=" + code)
-  .then(res => res.json())
-  .then(data => {
-
-    if (data.status === "valido") {
-      result.innerHTML = `
-        <h2 style="color:green;">✅ Boleto válido</h2>
-        <p><strong>Nombre:</strong> ${data.nombre}</p>
-        <p><strong>Tipo:</strong> ${data.tipo}</p>
-      `;
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Validador de Boleto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background-color: #f4f4f4;
     }
+    .valido { color: green; font-size: 28px; }
+    .usado { color: red; font-size: 28px; }
+    .error { color: orange; font-size: 22px; }
+    .detalle { font-size: 20px; margin-top: 10px; }
+  </style>
+</head>
+<body>
 
-    else if (data.status === "usado") {
-      result.innerHTML = `
-        <h2 style="color:red;">⚠️ Boleto ya usado</h2>
-        <p><strong>Nombre:</strong> ${data.nombre}</p>
-        <p><strong>Tipo:</strong> ${data.tipo}</p>
-      `;
-    }
+<div id="resultado">Validando...</div>
 
-    else {
-      result.innerHTML = `<h2 style="color:red;">❌ Boleto no encontrado</h2>`;
-    }
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+  const result = document.getElementById("resultado");
 
-  })
-  .catch(() => {
+  if (!code) {
     result.innerHTML =
-      "<div class='error'>Error de conexión</div>";
-  });
+      "<div class='error'>Código no válido</div>";
+  } else {
+
+    const sheetURL = "https://script.google.com/macros/s/AKfycbwcr6wshTWZJECRnRofNJ_ALvLnkSdqzsHBSy1K1ABr9RsUWifPO5G5ZkjOTuvXsJK5/exec";
+
+    fetch(sheetURL + "?code=" + code)
+      .then(response => response.json())
+      .then(data => {
+
+        if (data.status === "valido") {
+          result.innerHTML = `
+            <div class="valido">✅ Boleto válido</div>
+            <div class="detalle"><strong>Nombre:</strong> ${data.nombre}</div>
+            <div class="detalle"><strong>Tipo:</strong> ${data.tipo}</div>
+          `;
+        }
+
+        else if (data.status === "usado") {
+          result.innerHTML = `
+            <div class="usado">⚠️ Boleto ya usado</div>
+            <div class="detalle"><strong>Nombre:</strong> ${data.nombre}</div>
+            <div class="detalle"><strong>Tipo:</strong> ${data.tipo}</div>
+          `;
+        }
+
+        else if (data.status === "no_encontrado") {
+          result.innerHTML =
+            "<div class='error'>❌ Boleto no encontrado</div>";
+        }
+
+        else {
+          result.innerHTML =
+            "<div class='error'>Error inesperado</div>";
+        }
+
+      })
+      .catch(error => {
+        result.innerHTML =
+          "<div class='error'>Error de conexión</div>";
+        console.error(error);
+      });
+  }
+</script>
+
+</body>
+</html>
 
