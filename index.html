@@ -27,16 +27,26 @@
     fetch(sheetURL + "?code=" + code)
       .then(res => res.json())
       .then(data => {
-        if (data.status === "valido") {
-          document.getElementById("resultado").innerHTML =
-            "<div class='valido'>ACCESO PERMITIDO ✅</div>";
-        } else if (data.status === "usado") {
-          document.getElementById("resultado").innerHTML =
-            "<div class='usado'>BOLETO YA UTILIZADO ❌</div>";
-        } else {
-          document.getElementById("resultado").innerHTML =
-            "<div class='error'>BOLETO NO ENCONTRADO ⚠️</div>";
-        }
+ if (data.status === "valido") {
+  result.innerHTML = `
+    <h2 style="color:green;">✅ Boleto válido</h2>
+    <p><strong>Nombre:</strong> ${data.nombre}</p>
+    <p><strong>Tipo:</strong> ${data.tipo}</p>
+  `;
+}
+
+else if (data.status === "usado") {
+  result.innerHTML = `
+    <h2 style="color:red;">⚠️ Boleto ya usado</h2>
+    <p><strong>Nombre:</strong> ${data.nombre}</p>
+    <p><strong>Tipo:</strong> ${data.tipo}</p>
+  `;
+}
+
+else {
+  result.innerHTML = `<h2 style="color:red;">❌ Boleto no encontrado</h2>`;
+}
+
       })
       .catch(() => {
         document.getElementById("resultado").innerHTML =
