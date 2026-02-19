@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Validador de Boleto</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 100px; }
+    .valido { color: green; font-size: 28px; }
+    .usado { color: red; font-size: 28px; }
+    .error { color: orange; font-size: 22px; }
+  </style>
+</head>
+<body>
+
+<div id="resultado">Validando...</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get("code");
+
+  if (!code) {
+    document.getElementById("resultado").innerHTML =
+      "<div class='error'>Código no válido</div>";
+  } else {
+
+    const sheetURL = "PEGA_AQUI_TU_WEBAPP_URL";
+
+    fetch(sheetURL + "?code=" + code)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "valido") {
+          document.getElementById("resultado").innerHTML =
+            "<div class='valido'>ACCESO PERMITIDO ✅</div>";
+        } else if (data.status === "usado") {
+          document.getElementById("resultado").innerHTML =
+            "<div class='usado'>BOLETO YA UTILIZADO ❌</div>";
+        } else {
+          document.getElementById("resultado").innerHTML =
+            "<div class='error'>BOLETO NO ENCONTRADO ⚠️</div>";
+        }
+      })
+      .catch(() => {
+        document.getElementById("resultado").innerHTML =
+          "<div class='error'>Error de conexión</div>";
+      });
+  }
+</script>
+
+</body>
+</html>
